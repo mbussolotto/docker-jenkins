@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:2.73.2
 
 USER root
 # Connect apt docker repo
