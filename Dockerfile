@@ -1,4 +1,4 @@
-FROM jenkins:latest
+FROM jenkins/jenkins:lts
 
 USER root
 # Connect apt docker repo
