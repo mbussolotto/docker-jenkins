@@ -2,6 +2,10 @@ FROM jenkins/jenkins:lts
 
 USER root
 
+# Install various packages
+RUN apt-get update && apt-get install -y apt-transport-https dirmngr sudo && \
+    apt-get autoclean && apt-get autoremove
+
 # Install Docker and Docker Compose
 RUN curl https://get.docker.com/ | bash
 RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
