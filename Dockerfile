@@ -1,16 +1,12 @@
 FROM jenkins/jenkins:lts
 
 USER root
-# Connect apt docker repo
-RUN apt-get update && apt-get install -y apt-transport-https dirmngr sudo && \
-    apt-get autoclean && apt-get autoremove && \
-    echo "deb https://apt.dockerproject.org/repo debian-stretch main" > /etc/apt/sources.list.d/docker.list && \
-    apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 # Install Docker and Docker Compose
-RUN apt-get update && apt-get install -y docker-engine && apt-get autoclean && apt-get autoremove
-RUN curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
+RUN curl https://get.docker.com/ | bash
+RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
+
 
 # Configure docker group and jenkins user
 RUN usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins

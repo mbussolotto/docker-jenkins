@@ -12,4 +12,4 @@ else
 fi
 
 # Continue with the jenkins image entrypoint.
-exec /bin/tini -- /usr/local/bin/jenkins.sh "$@"
+exec /sbin/tini -- /usr/local/bin/jenkins.sh "$@"
