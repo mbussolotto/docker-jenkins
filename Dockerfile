@@ -2,9 +2,13 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-# Install various packages
-RUN apt-get update && apt-get install -y apt-transport-https dirmngr sudo && \
-  apt-get autoclean && apt-get autoremove
+RUN apt-get update; \
+  # Connect git-lfs repo
+  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash; \
+  # Install various packages
+  apt-get install -y apt-transport-https dirmngr sudo rsync git-lfs \
+  && apt-get autoclean \
+  && apt-get autoremove
 
 # Install Docker and all versions of Docker Compose
 RUN curl https://get.docker.com/ | bash
@@ -23,12 +27,6 @@ RUN echo "jenkins ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-# Connect git-lfs repo
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-
-# Install rsync and git-lfs
-RUN apt-get update && apt-get install -y rsync git-lfs && apt-get autoclean && apt-get autoremove
 
 USER jenkins
 RUN git lfs install
