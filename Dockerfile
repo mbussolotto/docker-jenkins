@@ -4,13 +4,18 @@ USER root
 
 # Install various packages
 RUN apt-get update && apt-get install -y apt-transport-https dirmngr sudo && \
-    apt-get autoclean && apt-get autoremove
+  apt-get autoclean && apt-get autoremove
 
-# Install Docker and Docker Compose
+# Install Docker and all versions of Docker Compose
 RUN curl https://get.docker.com/ | bash
-RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
-
+RUN TAGS=$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP '[0-9]+\.[0-9][0-9]+\.[0-9]+$'); \
+  for COMPOSE_VERSION in $TAGS; do \
+  echo "Fetching Docker Compose version ${COMPOSE_VERSION}"; \
+  curl -LsS -C - https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose-${COMPOSE_VERSION}; \
+  done; \
+  chmod a+x /usr/local/bin/docker-compose-*; \
+  echo "Symlinking most recent stable Docker Compose version"; \
+  ln -s /usr/local/bin/docker-compose-${COMPOSE_VERSION} /usr/local/bin/docker-compose
 
 # Configure docker group and jenkins user
 RUN usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins
