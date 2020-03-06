@@ -25,7 +25,7 @@ RUN TAGS=$(git ls-remote https://github.com/docker/compose | grep refs/tags | gr
   ln -s "${LATEST}" /usr/local/bin/docker-compose
 
 # Configure docker group and jenkins user
-RUN usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins
+RUN groupadd docker && usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins
 RUN echo "jenkins ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
