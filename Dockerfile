@@ -10,6 +10,9 @@ RUN apt-get update; \
   && apt-get autoclean \
   && apt-get autoremove
 
+# Install Docker
+RUN curl https://get.docker.com/ | bash
+
 # Install all versions of Docker Compose from 1.20 on
 SHELL ["/bin/bash", "-c"]
 RUN TAGS=$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP '[0-9]+\.[2-9][0-9]+\.[0-9]+$'); \
