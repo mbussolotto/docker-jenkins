@@ -24,11 +24,6 @@ RUN TAGS=$(git ls-remote https://github.com/docker/compose | grep refs/tags | gr
   echo "Symlinking most recent stable Docker Compose version: ${LATEST}" && \
   ln -s "${LATEST}" /usr/local/bin/docker-compose
 
-# Install Habitus (http://www.habitus.io/)
-RUN HABITUS_VERSION=1.0.4; \
-  curl -Ls -o /usr/local/bin/habitus https://github.com/cloud66-oss/habitus/releases/download/$HABITUS_VERSION/habitus_linux_amd64; \
-  chmod a+x /usr/local/bin/habitus
-
 # Configure docker group and jenkins user
 RUN usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins
 RUN echo "jenkins ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
