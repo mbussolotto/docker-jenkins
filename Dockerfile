@@ -6,11 +6,12 @@ RUN apt-get update; \
   # Connect git-lfs repo
   curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash; \
   # Install various packages
-  apt-get install -y apt-transport-https dirmngr sudo rsync git-lfs \
+  apt-get install -y apt-transport-https dirmngr sudo rsync git-lfs file \
   && apt-get autoclean \
   && apt-get autoremove
 
 # Install all versions of Docker Compose from 1.20 on
+SHELL ["/bin/bash", "-c"]
 RUN TAGS=$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP '[0-9]+\.[2-9][0-9]+\.[0-9]+$'); \
   for COMPOSE_VERSION in $TAGS; do \
   export FILE="/usr/local/bin/docker-compose-${COMPOSE_VERSION}" && \
