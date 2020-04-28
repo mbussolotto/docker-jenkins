@@ -1,14 +1,13 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:latest
 
 USER root
 
-RUN apt-get update; \
-  # Connect git-lfs repo
-  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash; \
-  # Install various packages
-  apt-get install -y apt-transport-https dirmngr sudo rsync git-lfs file \
-  && apt-get autoclean \
-  && apt-get autoremove
+RUN sed -i 's/stretch/buster/g' /etc/apt/sources.list && \
+  apt-get update --yes && \
+  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash ; \
+  apt-get install --yes apt-transport-https dirmngr sudo rsync git-lfs file ansible maven \
+  && apt-get autoclean --yes \
+  && apt-get autoremove --yes
 
 # Install Docker
 RUN curl https://get.docker.com/ | bash
@@ -28,8 +27,8 @@ RUN TAGS=$(git ls-remote https://github.com/docker/compose | grep refs/tags | gr
   ln -s "${LATEST}" /usr/local/bin/docker-compose
 
 # Configure docker group and jenkins user
-RUN groupadd docker && usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins
-RUN echo "jenkins ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
+RUN groupadd docker ; usermod -aG docker jenkins && usermod -aG sudo jenkins && id jenkins
+RUN echo "jenkins ALL=(ALL)     NOPASSWD: ALL" >> /etc/sudoers
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
@@ -38,3 +37,4 @@ USER jenkins
 RUN git lfs install
 
 EXPOSE 8080
+
