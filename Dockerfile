@@ -20,6 +20,7 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 USER jenkins
+COPY .ssh $HOME/.ssh
 RUN git lfs install
 
 EXPOSE 8080
